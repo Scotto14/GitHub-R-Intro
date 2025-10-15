@@ -1,0 +1,38 @@
+---
+title: "Coding_Exercise"
+author: "Scott Otto"
+date: "2025-10-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+package_load <-
+  function(x) {
+    for (i in 1:length(x)) {
+      if (!x[i] %in% installed.packages()) {
+        install.packages(x[i])
+      }
+      library(x[i], character.only = TRUE)
+    }
+  }
+```
+
+## Create packages that I want to load
+
+```{r}
+packages = c("tidyverse", "palmerpenguins", "rmarkdown","ggthemes","RColorBrewer","viridis","ggdark","plotly", "rstatix")
+```
+
+## Load packages via string created above ^
+
+```{r}
+package_load(packages)
+```
+
+```{r}
+library(lterdatasampler)
+```

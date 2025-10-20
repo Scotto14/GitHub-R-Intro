@@ -10,29 +10,47 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-package_load <-
-  function(x) {
-    for (i in 1:length(x)) {
-      if (!x[i] %in% installed.packages()) {
-        install.packages(x[i])
-      }
-      library(x[i], character.only = TRUE)
-    }
-  }
-```
-
-## Create packages that I want to load
-
-```{r}
-packages = c("tidyverse", "palmerpenguins", "rmarkdown","ggthemes","RColorBrewer","viridis","ggdark","plotly", "rstatix")
-```
-
-## Load packages via string created above ^
-
-```{r}
-package_load(packages)
+source("setup.R")
 ```
 
 ```{r}
-library(lterdatasampler)
+data("knz_bison")
 ```
+
+# 1. Create a new column in the bison dataset that calculates the individual’s age at the time of observation.
+
+```{r}
+knz_bison <- knz_bison %>%
+  mutate(age_at_observation = rec_year - animal_yob)
+```
+
+# 2. Write a function that will first filter the bison dataset based on any user-specified weight threshold (returning the filtered dataset).
+
+```{r}
+bison_weight_filter <- function(data, weight_threshold) {
+  knz_bison %>%
+    filter(animal_weight >= weight_threshold)
+}
+
+
+bison_weight_filter(knz_bison, 500) %>%
+  View()
+```
+
+# 3. Create a boxplot showing weight distribution between male and female bison, and then conduct a t-test to see if weight is significantly difference between males and females.
+
+```{r}
+knz_bison %>%
+  ggplot(aes(x = animal_sex, y = animal_weight, fill = animal_sex)) +
+  geom_boxplot() +
+  labs(
+    title = "Weight Distribution Between Male and Female Bison",
+    x = "Sex",
+    y = "Animal Weight (kg)"
+  ) +
+  theme_minimal()
+
+t.test(animal_weight ~ animal_sex, data = knz_bison)
+```
+
+
